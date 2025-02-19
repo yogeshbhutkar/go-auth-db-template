@@ -1,0 +1,46 @@
+package main
+
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/yogeshbhutkar/go-jwt-with-db-template/models"
+)
+
+func main() {
+	server := gin.Default()
+
+	server.GET("/", healthCheck)
+
+	server.GET("/events", getEvents)
+	server.POST("/events", postEvents)
+
+	server.Run(":8080")
+}
+
+func healthCheck(context *gin.Context) {
+	context.JSON(http.StatusOK, gin.H{"message": "Health check successful!"})
+}
+
+func getEvents(context *gin.Context) {
+	context.JSON(http.StatusOK, gin.H{"events": models.GetEvents()})
+}
+
+func postEvents(context *gin.Context) {
+	var event models.Event
+	err := context.ShouldBindJSON(&event)
+
+	if err != nil {
+		context.JSON(
+			http.StatusBadRequest,
+			gin.H{"message": err.Error()},
+		)
+		return
+	}
+
+	event.ID = 1
+	event.UserID = 1
+	event.Save()
+
+	context.JSON(http.StatusCreated, gin.H{"event": event})
+}
