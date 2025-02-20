@@ -4,10 +4,12 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/yogeshbhutkar/go-jwt-with-db-template/db"
 	"github.com/yogeshbhutkar/go-jwt-with-db-template/models"
 )
 
 func main() {
+	db.InitDB()
 	server := gin.Default()
 
 	server.GET("/", healthCheck)
