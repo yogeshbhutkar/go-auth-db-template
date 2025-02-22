@@ -6,6 +6,9 @@ func RegisterRoutes(server *gin.Engine) {
 	// Register health check route.
 	server.GET("/", healthCheck)
 
+	// Register auth routes.
+	server.POST("/signup", signup)
+
 	// Register events routes.
 	server.GET("/events", getEvents)
 	server.GET("/events/:id", getEvent)
