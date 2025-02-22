@@ -1,6 +1,9 @@
 package models
 
-import "github.com/yogeshbhutkar/go-jwt-with-db-template/db"
+import (
+	"github.com/yogeshbhutkar/go-jwt-with-db-template/db"
+	"github.com/yogeshbhutkar/go-jwt-with-db-template/utils"
+)
 
 type User struct {
 	ID       int64
@@ -20,6 +23,11 @@ func (u User) Save() error {
 
 	defer stmt.Close()
 
-	_, err = stmt.Exec(u.Email, u.Password)
+	hashedPassword, err := utils.HashPassword(u.Password)
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec(u.Email, hashedPassword)
 	return err
 }
